@@ -59,7 +59,7 @@ class Node:
         return self.color==TURQUOISE
 
     def reset(self):
-        return self.color==WHITE
+        self.color=WHITE
 
 
     def make_closed(self):
@@ -139,7 +139,7 @@ def main(winframe, width):# the core struture of the program
     while run:
         draw(winframe,grid,rows,width)
         for event in pygame.event.get():#lets loop through all the events while run is true and check what the events are
-            if event.type==pygame.quit:
+            if event.type==pygame.QUIT:
                 run=False
             if started: # once we start the algo the user can not press anything unless quit 
                 continue
@@ -147,17 +147,24 @@ def main(winframe, width):# the core struture of the program
                 pos=pygame.mouse.get_pos()
                 row,col=get_click_pos(pos,rows,width) 
                 node=grid[row][col]
-                if not start: 
+                if not start and node != end : 
                     start=node
                     start.make_start()
-                elif not end:
+                elif not end and node !=start:
                     end=node
                     end.make_end()
                 elif node != end and node !=start:
                     node.make_barrier()
 
             elif pygame.mouse.get_pressed()[2]:#if the pygame mouse was right pressed
-                pass
+                pos= pos=pygame.mouse.get_pos()
+                row,col=get_click_pos(pos,rows,width) 
+                node=grid[row][col]
+                node.reset()
+                if node == start:
+                    start=None
+                elif node==end:
+                    end=None
                  
     pygame.quit()
 
